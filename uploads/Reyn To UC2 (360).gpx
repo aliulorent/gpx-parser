@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="Topo Maps" version="1.1">
+  <rte>
+    <name>New Route</name>
+    <rtept lat="-43.455450" lon="2.357434"/>
+  </rte>
+  <trk>
+    <name>Reyn To  UC2</name>
+    <trkseg>
+      <trkpt lat="43.530912" lon="-80.229241"/>
+      <trkpt lat="43.531590" lon="-80.228733"/>
+      <trkpt lat="43.532025" lon="-80.228630"/>
+      <trkpt lat="43.532047" lon="-80.228117"/>
+      <trkpt lat="43.531878" lon="-80.227435"/>
+      <trkpt lat="43.531053" lon="-80.226785"/>
+      <trkpt lat="43.530950" lon="-80.226596"/>
+    </trkseg>
+  </trk>
+</gpx>

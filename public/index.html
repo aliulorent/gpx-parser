@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GPS Data Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CHANGE ME">
+    <meta name="keywords" content="CHANGE ME">
+    <meta name="author" content="CHANGE ME">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+    <hr>
+    <h4>File Log Panel</h4>
+    <hr>
+    <div id="table-scroll">
+    <table id="table1" frame=void rules=columns>
+        <tr>
+            <th><b>File name (click to download) </b></th>
+            <th><b> Version </b></th>
+            <th><b> Creator </b></th>
+            <th><b> Number of Waypoints </b></th>
+            <th><b> Number of Routes </b></th>
+            <th><b> Number of Tracks </b></th>
+        </tr>
+    </table>
+    </div>
+
+    <form ref='uploadForm'
+		id='uploadForm'
+      action='/upload'
+      method='post'
+      encType="multipart/form-data">
+      <div class="form-group">
+      	<input type="file" name="uploadFile" class="btn btn-secondary">
+      	<input type='submit' value='Upload' class="btn btn-secondary">
+      </div>
+`   </form>
+    <hr>
+    <h4>GPX View Panel</h4>
+    <hr>
+
+    <label for="currentDoc">Select a GPX to view:</label>
+
+    <select name="currentDoc" id="currentDoc"></select>
+
+    <div id="table-scroll2">
+        <table id="table2"  frame=void rules=columns>
+            <tr>
+                <th><b>Component</b></th>
+                <th><b>Name</b></th>
+                <th><b>Number of points</b></th>
+                <th><b>Length</b></th>
+                <th><b>Loop</b></th>
+            </tr>
+        </table>
+        </div>
+        <label for='currentComponent'>Select Component</label>
+        <select name="currentComponent" id="currentComponent"></select>
+        <button type="button" id="otherData">Show other data</button>
+        <form>
+            <label for="rename">New name:</label>
+            <input type='text' id="rename" name="rename">
+            <button type="button" id="submission">Rename</button>
+            <div id='renamestatus'></div>
+        </form>
+        <br>
+        <div id='extraData'>
+            
+        </div>
+    <hr> 
+    <h4>Customizing GPX Panel</h4>
+    <hr>
+
+    <h6><b>Creating New GPX Files</b></h6>
+        <form>
+            <label for="freshName">Document name (with extension):</label><br>
+            <input type='text' id="freshname" name="freshname"><br>
+            <label for="freshCreator">Name of creator:</label><br>
+            <input type='text' id="freshCreator" name="freshCreator"><br>
+            <label for="freshVersion">Version:</label><br>
+            <input type='number' min="0" step="any" id="freshVersion" name="freshVersion">
+            <button type="button" id="createGPX">Create</button><br>
+            <div id='newError'>
+
+            </div>
+        </form>
+        <br>
+        <hr>
+    <h6><b>Add route to existing files</b></h6>
+    <br>
+    <label for='editDoc'>Select Document</label>
+    <select name="editDoc" id="editDoc"></select><br>
+    <form>
+
+        <label for="latitude">Latitude (-90 to 90):</label><br>
+        <input type='number' value='0' min = '-90' max = '90' step='any' id="latitude" name="latitude"><br>
+
+        <label for="longitude">Longitude (-180 to 180):</label><br>
+        <input type='number' value='0' min = '-180' max = '180' step='any' id="longitude" name="longitude">
+        <button type="button" id="addWp">Add Waypoint</button>
+        <div id='wpAdded'>
+        </div>
+        <br>
+        <hr>
+        <label for="newRoute">Enter route name:</label><br>
+        <input type='text' id="newRoute" name="newRoute">
+        <button type="button" id="addRoute">Add Route</button>
+        <div id='routeAdded'></div>
+        <br>
+
+    </form>
+    <br>
+    <hr>
+    <h6><b>Find paths between</b></h6>
+
+    <div style="float:left">
+        <form>
+            <label for="latOne">Latitude 1:</label><br>
+            <input type='number' value='0' min = '-90' max = '90' step='any' id="latOne" name="latOne"><br>
+            <label for="lonOne">Longitude 1:</label><br>
+            <input type='number' value='0' min = '-180' max = '180' step='any' id="lonOne" name="lonOne">
+        </form>
+    </div>
+    <div>
+        <form>
+            <label for="latTwo">Latitude 2:</label><br>
+            <input type='number' value='0' min = '-90' max = '90' step='any' id="latTwo" name="latTwo"><br>
+            <label for="lonTwo">Latitude 2:</label><br>
+            <input type='number' value='0' min = '-180' max = '180' step='any' id="lonTwo" name="lonTwo">
+        </form>
+    </div>
+    <br>
+    <form>
+        <label for="delta">Tolerance (m):</label><br>
+        <input type='number' value='0' min='0' max='10000' step='any' id="delta" name="delta"><br>
+    </form>
+    <br>
+    <button type="button" id="findPaths">Find paths</button>
+    <br>
+    <br>
+    <div id='foundPaths'>
+        <div id='missingPath'></div>
+        <table id="pathsTable">
+        </table>
+    </div>
+
+    <hr> 
+    <h4>Database Operations</h4><br>
+    <div>Warning: a lot of the features below are buggy, heres a run down.</div>
+    <div>Clear data & display DB status works fine. Store all files bugs out a lot.</div>
+    <div>In its current state it will possibly crash with specific files in /uploads. Also it will not properly add all points to DB.</div>
+    <div>The issues occurs usually when there are components with no name (route or waypoint)</div>
+    <div>As a result, for testing purpose it may be better to add your own rows in a command line to the DB when testing the queries below</div>
+    
+    <hr>
+    <h6><b>Login Information</b></h6>
+
+    <form>
+        <label for="dbUser">User Name:</label><br>
+        <input type='text' id="dbUser" name="dbUser"><br>
+        <label for="dbPass">Password:</label><br>
+        <input type='text' id="dbPass" name="dbPass"><br>
+        <label for="dbName">Database name:</label><br>
+        <input type='text' id="dbName" name="dbName">
+        <button type="button" id="dbConnect">Connect</button><br>
+        <div id='dbStatus'>
+        </div>
+    </form>
+
+    <hr>
+    <button type="button" id="storeFiles">Store All Files</button>
+    <button type="button" id="clearDb">Clear all Data (DB)</button>
+    <button type="button" id="displayStatus">Display DB Status</button><br>
+    <div id='dbButtons'></div>
+
+    <hr>
+    Sorry the UI for this part is extremely ugly
+    <br>
+    <button type="button" id="allRoutes">Display ALL routes</button>
+    <button type="button" id="specificRoute">Display route from specific file</button>
+    <button type="button" id="specificPoints">Display points from specific route</button>
+    <button type="button" id="allPointsFile">Display points from specific file</button>
+    <button type="button" id="displayN">Display N routes from specific file</button>
+    <label for="dbN">N:</label>
+    <input type='number' min="0" step="1" id="dbN" name="dbN">
+    <label for='NSort'>Sort By</label>
+    <select name="NSort" id="NSort">
+        <option>Longest</option>
+        <option>Shortest</option>
+    </select>
+
+    <br>
+    <label for='dbFileSelect'>Select File</label>
+    <select name="dbFileSelect" id="dbFileSelect"></select>
+    <label for='dbRouteSelect'>Select Route</label>
+    <select name="dbRouteSelect" id="dbRouteSelect"></select>
+    <label for='dbSort'>Sort By</label>
+    <select name="dbSort" id="dbSort">
+        <option>Name</option>
+        <option>Length</option>
+    </select><br>
+    <div>If any files seem missing, click connect (login) to force refresh!</div>
+    <table id="dbTable" frame=void rules=columns>
+
+    </table>
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+</html>
+
